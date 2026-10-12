@@ -89,7 +89,7 @@ const HeroBanner = ({ onExploreDiscount, onExploreCategory }) => {
               WebkitBackgroundClip: 'text', 
               WebkitTextFillColor: 'transparent' 
             }}>
-              ElectroShop
+              Yosh Kuch Market
             </span> Bilan Kashf Eting
           </h1>
 

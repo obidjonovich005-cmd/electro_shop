@@ -87,7 +87,7 @@ const Navbar = ({
               alignItems: 'center',
               gap: 4
             }}>
-              ElectroShop
+              Yosh Kuch
               <span style={{ 
                 fontSize: '0.65rem', 
                 padding: '2px 7px', 
@@ -95,7 +95,7 @@ const Navbar = ({
                 color: theme === 'light' ? '#4f46e5' : '#a5b4fc', 
                 borderRadius: 6, 
                 fontWeight: 800 
-              }}>PRO</span>
+              }}>MARKET</span>
             </div>
             <div style={{ 
               fontSize: '0.72rem', 

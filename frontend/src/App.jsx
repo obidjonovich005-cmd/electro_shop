@@ -244,11 +244,11 @@ function App() {
                   <Zap size={22} color="#fff" />
                 </div>
                 <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-display)' }}>
-                  ElectroShop
+                  Yosh Kuch Market
                 </span>
               </div>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.6, marginBottom: 16 }}>
-                Eng yangi elektronika gadjetlari, smartfonlar va noutbuklar rasmiy kafolati bilan O'zbekistondagi yetakchi do'kon.
+                Eng yangi elektronika gadjetlari, smartfonlar va maishiy texnikalar rasmiy kafolati bilan O'zbekistondagi yetakchi do'kon.
               </p>
               <div style={{ display: 'flex', gap: 10 }}>
                 {['Click', 'Payme', 'Uzum', 'Visa', 'Mastercard'].map((p) => (
@@ -303,7 +303,7 @@ function App() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Mail size={15} color="var(--accent-primary)" />
-                  <span>support@electroshop.uz</span>
+                  <span>support@yoshkuch.uz</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <MapPin size={15} color="var(--accent-success)" />
@@ -324,7 +324,7 @@ function App() {
             flexWrap: 'wrap',
             gap: 12
           }}>
-            <div>© 2026 ElectroShop Pro. Barcha huquqlar himoyalangan.</div>
+            <div>© 2026 Yosh Kuch Market. Barcha huquqlar himoyalangan.</div>
             <div>Designed & Developed with Django REST + Modern React</div>
           </div>
         </div>
