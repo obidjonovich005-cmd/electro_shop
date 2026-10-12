@@ -9,10 +9,9 @@ const HeroBanner = ({ onExploreDiscount, onExploreCategory }) => {
   return (
     <div style={{ maxWidth: 1320, margin: '24px auto', padding: '0 20px' }}>
       <div 
-        className="glass-panel" 
+        className="glass-panel hero-banner-card" 
         style={{ 
           borderRadius: 'var(--radius-xl)', 
-          padding: '40px 48px',
           background: isLight 
             ? 'linear-gradient(135deg, #ffffff 0%, #f8fafc 55%, #eef2ff 100%)' 
             : 'linear-gradient(135deg, rgba(24, 33, 58, 0.9) 0%, rgba(15, 23, 42, 0.95) 60%, rgba(30, 27, 75, 0.85) 100%)',
@@ -22,9 +21,6 @@ const HeroBanner = ({ onExploreDiscount, onExploreCategory }) => {
             : '0 20px 50px rgba(0, 0, 0, 0.5), 0 0 60px rgba(99, 102, 241, 0.15)',
           position: 'relative',
           overflow: 'hidden',
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 0.8fr',
-          gap: 32,
           alignItems: 'center'
         }}
       >
@@ -72,9 +68,8 @@ const HeroBanner = ({ onExploreDiscount, onExploreCategory }) => {
             </span>
           </div>
 
-          <h1 style={{ 
+          <h1 className="hero-title" style={{ 
             fontFamily: 'var(--font-display)', 
-            fontSize: '2.8rem', 
             fontWeight: 800, 
             lineHeight: 1.15, 
             letterSpacing: '-1px', 

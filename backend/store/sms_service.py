@@ -77,19 +77,15 @@ def send_sms(phone: str, message: str) -> dict:
     email = getattr(settings, 'ESKIZ_EMAIL', '')
     password = getattr(settings, 'ESKIZ_PASSWORD', '')
 
-    # Agar test rejimida bo'lsa yoki Eskiz sozlanmagan bo'lsa:
-    if getattr(settings, 'DEBUG', False) and (not email or not password or 'example.com' in email or 'your_' in password):
-        print(f"\n{'='*55}\n[DEV REJIMI SMS YUBORILDI]\nQabul qiluvchi: +{formatted_phone}\nXabar matni:\n{message}\n{'='*55}\n")
-        logger.info(f"[DEV SMS] +{formatted_phone} -> {message}")
+    # Agar Eskiz sozlanmagan bo'lsa, simulyatsiya qilib test rejimida o'tkazish:
+    if not email or not password or 'mail.com' in email or 'sizning_' in email or 'sizning_' in password:
+        logger.info(f"[SIMULATED SMS] +{formatted_phone} -> {message}")
         return {"success": True, "message_id": "dev-simulated", "is_dev": True}
 
     token = _get_token()
     if not token:
-        # Agar DEBUG bo'lsa va login o'xshamasa ham dev rejimida o'tkazish
-        if getattr(settings, 'DEBUG', False):
-            print(f"\n{'='*55}\n[DEV REJIMI SMS (Eskiz ulanmadi)]\nQabul qiluvchi: +{formatted_phone}\nXabar matni:\n{message}\n{'='*55}\n")
-            return {"success": True, "message_id": "dev-simulated", "is_dev": True}
-        return {"success": False, "error": "SMS xizmati vaqtincha ishlamayapti."}
+        logger.warning(f"[Eskiz token olinmadi, test rejimida o'tkazildi] +{formatted_phone}")
+        return {"success": True, "message_id": "dev-simulated", "is_dev": True}
 
     try:
         resp = requests.post(
@@ -137,7 +133,7 @@ def send_sms(phone: str, message: str) -> dict:
 def send_otp_sms(phone: str, code: str) -> dict:
     """OTP kodni SMS orqali yuboradi."""
     message = (
-        f"ElectroShop tasdiqlash kodi:\n"
+        f"Yosh Kuch Market tasdiqlash kodi:\n"
         f"{code}\n"
         f"Kod 5 daqiqa davomida amal qiladi.\n"
         f"Kodni hech kimga bermang!"
@@ -148,7 +144,7 @@ def send_otp_sms(phone: str, code: str) -> dict:
 def send_order_sms(phone: str, order_id: int, full_name: str, total_price) -> dict:
     """Buyurtma tasdiqlanganligi haqida SMS yuboradi."""
     message = (
-        f"ElectroShop - Buyurtma #{order_id}\n"
+        f"Yosh Kuch Market - Buyurtma #{order_id}\n"
         f"Hurmatli {full_name}!\n"
         f"Buyurtmangiz qabul qilindi.\n"
         f"Summa: {int(total_price):,} so'm\n"

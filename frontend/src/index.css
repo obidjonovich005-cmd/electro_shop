@@ -383,3 +383,116 @@ body {
   );
   background-size: 200% 100%;
 }
+
+/* ═══ RESPONSIVE MOBILE STYLES (TELEFONLAR VA PLANSHETLAR UCHUN) ═══ */
+
+/* 1. Hero Banner */
+.hero-banner-card {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 32px;
+  padding: 40px 48px;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+}
+
+@media (max-width: 992px) {
+  .hero-banner-card {
+    grid-template-columns: 1fr;
+    padding: 30px 22px;
+    gap: 28px;
+    text-align: left;
+  }
+  .hero-title {
+    font-size: 2.1rem;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-banner-card {
+    padding: 20px 16px;
+    gap: 20px;
+    border-radius: var(--radius-lg);
+  }
+  .hero-title {
+    font-size: 1.65rem;
+    line-height: 1.22;
+  }
+}
+
+/* 2. Catalog & Filtrlar */
+.catalog-layout {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.filter-sidebar-card {
+  padding: 20px;
+  position: sticky;
+  top: 96px;
+}
+
+.mobile-filter-toggle-row {
+  display: none;
+  margin-bottom: 16px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .catalog-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .mobile-filter-toggle-row {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .mobile-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border-radius: var(--radius-md);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    color: var(--text-main);
+  }
+  .filter-sidebar-card {
+    position: static;
+    top: auto;
+  }
+  .filter-sidebar-card.mobile-filters-closed {
+    display: none;
+  }
+  .filter-sidebar-card.mobile-filters-open {
+    display: block;
+    animation: fadeIn 0.25s ease-out;
+  }
+}
+
+@media (max-width: 640px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

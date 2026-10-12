@@ -31,6 +31,7 @@ function App() {
   const [inStockOnly, setInStockOnly] = useState(false);
   const [discountOnly, setDiscountOnly] = useState(false);
   const [sort, setSort] = useState('newest');
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Modals & Navigation
   const [detailSlug, setDetailSlug] = useState(null);
@@ -131,10 +132,21 @@ function App() {
           </div>
         </div>
 
+        {/* Mobile Filter Toggle Button */}
+        <div className="mobile-filter-toggle-row">
+          <button 
+            onClick={() => setShowMobileFilters((prev) => !prev)}
+            className="btn btn-secondary mobile-filter-btn"
+          >
+            <span>🎛️ {showMobileFilters ? "Filtrlarni yashirish" : "Filtrlarni ko'rsatish"}</span>
+            <span className="badge badge-stock">{products.length} ta</span>
+          </button>
+        </div>
+
         {/* Catalog 2-column layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '270px 1fr', gap: 28, alignItems: 'flex-start' }}>
+        <div className="catalog-layout">
           {/* Left Column: Filter Sidebar */}
-          <div className="glass-card" style={{ padding: 20, position: 'sticky', top: 96 }}>
+          <div className={`glass-card filter-sidebar-card ${showMobileFilters ? 'mobile-filters-open' : 'mobile-filters-closed'}`}>
             <FilterSidebar
               categories={categories}
               selectedCategory={selectedCategory}
@@ -160,13 +172,7 @@ function App() {
           {/* Right Column: Product Cards Grid */}
           <div>
             {loading ? (
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-                  gap: 20,
-                }}
-              >
+              <div className="products-grid">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
                   <ProductCardSkeleton key={n} />
                 ))}
@@ -189,11 +195,7 @@ function App() {
               </div>
             ) : (
               <>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-                  gap: 20
-                }}>
+                <div className="products-grid">
                   {products.slice(0, visibleCount).map((product) => (
                     <ProductCard
                       key={product.id}
