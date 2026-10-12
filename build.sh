@@ -11,4 +11,7 @@ python manage.py collectstatic --no-input
 echo "Applying database migrations..."
 python manage.py migrate
 
+echo "Populating products and categories..."
+python store/seed.py || true
+
 echo "Build completed successfully!"
