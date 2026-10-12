@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Savatcha va Buyurtma — ElectroShop{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
+            <span class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </span>
+            <span>Savatchangiz</span>
+        </h1>
+        {% if cart_items %}
+        <span class="text-xs sm:text-sm font-semibold text-slate-500 bg-white px-3 py-1.5 rounded-xl border border-slate-200">
+            Jami: <strong class="text-indigo-600">{{ cart_items|length }}</strong> xil tovar
+        </span>
+        {% endif %}
+    </div>
+
+    {% if cart_items %}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Chap tomon: Tovarlar ro'yxati -->
+        <div class="lg:col-span-7 space-y-4">
+            {% for item in cart_items %}
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm hover:border-indigo-200 transition">
+                <div class="flex items-center gap-4 w-full sm:w-auto">
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 bg-slate-950 rounded-2xl p-2.5 flex items-center justify-center flex-shrink-0">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="max-h-full max-w-full object-contain">
+                        {% else %}
+                        <i class="fa-solid fa-image text-slate-700 text-2xl"></i>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold text-indigo-600 uppercase">{{ item.product.category.name }}</span>
+                        <a href="{% url 'store:product_detail' item.product.slug %}" class="font-bold text-slate-900 text-sm sm:text-base hover:text-indigo-600 transition block">
+                            {{ item.product.name }}
+                        </a>
+                        <div class="text-xs text-slate-500 mt-1 flex items-center gap-2">
+                            <span>Dona: <strong class="text-slate-800">{{ item.product.current_price|floatformat:0 }} so'm</strong></span>
+                            {% if item.product.stock <= 3 %}
+                            <span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-[10px] font-bold">Faqat {{ item.product.stock }} ta qoldi!</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sonini boshqarish va jami narx -->
+                <div class="flex items-center justify-between w-full sm:w-auto gap-6 sm:gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100">
+                    <div class="flex items-center border border-slate-200 rounded-2xl overflow-hidden bg-slate-50 shadow-inner">
+                        <a href="{% url 'store:cart_remove' item.product.id %}" class="w-8 h-8 flex items-center justify-center hover:bg-slate-200 text-slate-700 font-bold transition select-none">-</a>
+                        <span class="w-8 text-center text-sm font-extrabold text-slate-900">{{ item.quantity }}</span>
+                        <a href="{% url 'store:cart_add' item.product.id %}" class="w-8 h-8 flex items-center justify-center hover:bg-slate-200 text-slate-700 font-bold transition select-none">+</a>
+                    </div>
+                    
+                    <div class="text-right">
+                        <div class="text-base font-black text-slate-900">{{ item.total_price|floatformat:0 }} so'm</div>
+                        <a href="{% url 'store:cart_delete' item.product.id %}" class="text-[11px] text-rose-500 hover:text-rose-700 font-semibold transition inline-flex items-center gap-1 mt-0.5">
+                            <i class="fa-solid fa-trash-can text-[10px]"></i> O'chirish
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Xaridni davom ettirish tugmasi -->
+            <div class="pt-2">
+                <a href="{% url 'store:home' %}" class="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition">
+                    <i class="fa-solid fa-arrow-left text-[11px]"></i> Yana boshqa tovarlar qo'shish
+                </a>
+            </div>
+        </div>
+
+        <!-- O'ng tomon: Buyurtma va To'lov usullari formasi -->
+        <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-sm sticky top-28">
+            <h2 class="text-lg font-black text-slate-900 mb-4 pb-3 border-b border-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-wallet text-indigo-600"></i> Rasmiylashtirish va To'lov
+            </h2>
+            
+            <!-- Jami summa kartochkasi -->
+            <div class="bg-gradient-to-br from-indigo-900 to-slate-950 text-white p-5 rounded-2xl mb-6 shadow-md shadow-indigo-950/20">
+                <div class="flex justify-between items-center text-xs text-indigo-200 mb-1">
+                    <span>Yetkazib berish:</span>
+                    <span class="text-emerald-400 font-bold">Bepul (0 so'm)</span>
+                </div>
+                <div class="flex justify-between items-baseline pt-2 border-t border-indigo-800/60">
+                    <span class="text-sm font-semibold text-slate-200">Jami to'lanadigan summa:</span>
+                    <span class="text-2xl font-black text-white tracking-tight">{{ total_price|floatformat:0 }} so'm</span>
+                </div>
+            </div>
+
+            <form action="{% url 'store:checkout' %}" method="POST" class="space-y-4">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Qabul qiluvchi F.I.Sh. <span class="text-rose-500">*</span></label>
+                    <input type="text" name="full_name" required value="{{ user_data.full_name|default:'' }}" 
+                           placeholder="Masalan: Sardor Rustamov" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Telefon raqam <span class="text-rose-500">*</span></label>
+                    <input type="tel" name="phone" required value="{{ user_data.phone|default:'' }}" 
+                           placeholder="+998 90 123 45 67" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Yetkazib berish manzili <span class="text-rose-500">*</span></label>
+                    <textarea name="address" required rows="2" placeholder="Shahar, tuman, ko'cha, uy raqami yoki mo'ljal" 
+                              class="w-full px-4 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm">{{ user_data.address|default:'' }}</textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Kuryer uchun izoh (ixtiyoriy)</label>
+                    <input type="text" name="comment" placeholder="Masalan: Domofon kodi 45, eshik oldida qo'ng'iroq qiling" 
+                           class="w-full px-4 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-xs">
+                </div>
+
+                <!-- TO'LOV TIZIMINI TANLASH -->
+                <div class="pt-3 border-t border-slate-100">
+                    <label class="block text-xs font-black text-slate-800 uppercase tracking-wider mb-2.5">
+                        <i class="fa-solid fa-credit-card text-indigo-600 mr-1"></i> To'lov usulini tanlang:
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <!-- Click Up -->
+                        <label class="relative flex items-center p-3 rounded-2xl border-2 border-slate-200 hover:border-purple-500 cursor-pointer transition select-none has-[:checked]:border-purple-600 has-[:checked]:bg-purple-50/50">
+                            <input type="radio" name="payment_method" value="click" checked class="accent-purple-600 mr-2.5">
+                            <div>
+                                <div class="font-extrabold text-xs text-purple-900 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span> Click Up
+                                </div>
+                                <div class="text-[10px] text-slate-500">Ilova yoki karta</div>
+                            </div>
+                        </label>
+
+                        <!-- Payme -->
+                        <label class="relative flex items-center p-3 rounded-2xl border-2 border-slate-200 hover:border-cyan-500 cursor-pointer transition select-none has-[:checked]:border-cyan-500 has-[:checked]:bg-cyan-50/50">
+                            <input type="radio" name="payment_method" value="payme" class="accent-cyan-500 mr-2.5">
+                            <div>
+                                <div class="font-extrabold text-xs text-cyan-900 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Payme
+                                </div>
+                                <div class="text-[10px] text-slate-500">Payme orqali to'lov</div>
+                            </div>
+                        </label>
+
+                        <!-- Uzum Bank -->
+                        <label class="relative flex items-center p-3 rounded-2xl border-2 border-slate-200 hover:border-violet-500 cursor-pointer transition select-none has-[:checked]:border-violet-600 has-[:checked]:bg-violet-50/50">
+                            <input type="radio" name="payment_method" value="uzum" class="accent-violet-600 mr-2.5">
+                            <div>
+                                <div class="font-extrabold text-xs text-violet-900 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-violet-600"></span> Uzum Bank
+                                </div>
+                                <div class="text-[10px] text-slate-500">Uzum / Muddatli</div>
+                            </div>
+                        </label>
+
+                        <!-- Naqd pul / Kuryerga -->
+                        <label class="relative flex items-center p-3 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 cursor-pointer transition select-none has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
+                            <input type="radio" name="payment_method" value="cash" class="accent-emerald-600 mr-2.5">
+                            <div>
+                                <div class="font-extrabold text-xs text-emerald-900 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> Naqd / Kuryer
+                                </div>
+                                <div class="text-[10px] text-slate-500">Yetkazilganda to'lash</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tasdiqlash tugmasi -->
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-600/30 transition flex items-center justify-center gap-2 mt-4 text-sm glow-hover active:scale-[0.99]">
+                    <i class="fa-solid fa-lock text-xs"></i> Buyurtmani rasmiylashtirish
+                </button>
+
+                <p class="text-[11px] text-center text-slate-400 mt-2">
+                    🔒 Ma'lumotlaringiz 256-bitli shifrlash orqali to'liq himoyalangan.
+                </p>
+            </form>
+        </div>
+
+    </div>
+    {% else %}
+    <div class="text-center py-24 bg-white rounded-3xl border border-slate-200 shadow-sm max-w-xl mx-auto">
+        <div class="w-24 h-24 bg-indigo-50 text-indigo-500 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-4">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+        <h2 class="text-2xl font-black text-slate-800">Savatchangiz bo'sh</h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-2 mb-8 max-w-sm mx-auto">
+            Siz hali hech qanday gadjet qo'shmadingiz. Katalogimizdagi ajoyib takliflarni ko'ring!
+        </p>
+        <a href="{% url 'store:home' %}" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3.5 rounded-2xl transition inline-flex items-center gap-2 shadow-lg shadow-indigo-600/20 text-sm glow-hover">
+            Xarid qilishni boshlash <i class="fa-solid fa-arrow-right text-xs"></i>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

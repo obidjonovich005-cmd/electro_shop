@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Tizimga kirish — ElectroShop{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto px-4 py-16">
+    <div class="bg-white rounded-3xl border border-slate-200 p-8 sm:p-10 shadow-xl">
+        
+        <div class="text-center mb-8">
+            <span class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-xl mx-auto mb-3">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </span>
+            <h1 class="text-2xl font-black text-slate-900">Hisobingizga kiring</h1>
+            <p class="text-xs text-slate-500 mt-1">Buyurtmalaringizni boshqarish va kuzatish uchun</p>
+        </div>
+
+        <form method="POST" action="{% url 'store:login' %}" class="space-y-4">
+            {% csrf_token %}
+            {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Login yoki Telefon raqam</label>
+                <div class="relative">
+                    <input type="text" name="username" required placeholder="Foydalanuvchi nomi yoki +998..." 
+                           class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm">
+                    <i class="fa-solid fa-user absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Parol</label>
+                <div class="relative">
+                    <input type="password" name="password" required placeholder="••••••••" 
+                           class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm">
+                    <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition text-sm flex items-center justify-center gap-2 mt-2 glow-hover active:scale-[0.99]">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Kirish
+            </button>
+        </form>
+
+        <div class="text-center pt-6 mt-6 border-t border-slate-100 text-xs text-slate-600">
+            Hisobingiz yo'qmi? 
+            <a href="{% url 'store:register' %}" class="font-bold text-indigo-600 hover:text-indigo-800 ml-1">
+                Ro'yxatdan o'tish
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

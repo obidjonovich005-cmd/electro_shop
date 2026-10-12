@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Buyurtma qabul qilindi — ElectroShop{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-14">
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-lg text-center relative overflow-hidden">
+        
+        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-5 shadow-md shadow-emerald-500/20">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Buyurtmangiz qabul qilindi! 🎉</h1>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mb-8">
+            Rahmat! Buyurtmangiz tizimga muvaffaqiyatli kiritildi. Operatorimiz tez orada buyurtmani tasdiqlash uchun siz bilan bog'lanadi.
+        </p>
+
+        <!-- Kvitansiya (Receipt Card) -->
+        <div class="bg-slate-50 rounded-2xl p-6 text-left border border-slate-200/80 mb-8 space-y-4">
+            <div class="flex flex-wrap justify-between items-center pb-3 border-b border-slate-200 gap-2">
+                <span class="text-xs font-bold text-slate-500 uppercase">Buyurtma hujjati:</span>
+                <span class="font-mono font-black text-indigo-600 text-sm">#{{ order.id }}</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div>
+                    <span class="text-slate-400 block mb-0.5">Qabul qiluvchi:</span>
+                    <strong class="text-slate-800 text-sm">{{ order.full_name }}</strong>
+                </div>
+                <div>
+                    <span class="text-slate-400 block mb-0.5">Telefon:</span>
+                    <strong class="text-slate-800 text-sm">{{ order.phone }}</strong>
+                </div>
+                <div class="sm:col-span-2">
+                    <span class="text-slate-400 block mb-0.5">Yetkazib berish manzili:</span>
+                    <strong class="text-slate-800">{{ order.address }}</strong>
+                </div>
+            </div>
+
+            <!-- To'lov holati qatori -->
+            <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="text-slate-500">To'lov turi:</span>
+                    <strong class="text-slate-800">{{ order.get_payment_method_display }}</strong>
+                    {% if order.card_pan %}
+                    <span class="text-indigo-600 font-mono font-bold text-[11px] bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                        {{ order.card_pan }}
+                    </span>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if order.payment_status == 'paid' %}
+                    <span class="bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i> To'langan
+                    </span>
+                    {% else %}
+                    <span class="bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+                        <i class="fa-solid fa-clock text-amber-600"></i> Kutilmoqda (Yetkazilganda)
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Tovar elementlari -->
+            {% if order.items.all %}
+            <div class="pt-3 border-t border-slate-200 space-y-2">
+                <span class="text-[11px] font-bold text-slate-500 uppercase">Xarid qilingan mahsulotlar:</span>
+                {% for itm in order.items.all %}
+                <div class="flex justify-between items-center text-xs text-slate-700">
+                    <span>{{ itm.product.name }} <span class="text-slate-400 font-semibold">(x{{ itm.quantity }})</span></span>
+                    <span class="font-bold text-slate-900">{{ itm.price|floatformat:0 }} so'm</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="flex justify-between items-center text-base pt-4 border-t border-slate-200">
+                <span class="font-extrabold text-slate-800">Jami to'lov summasi:</span>
+                <span class="font-black text-indigo-600 text-xl">{{ order.total_price|floatformat:0 }} so'm</span>
+            </div>
+        </div>
+
+        <!-- Tugmalar -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            {% if user.is_authenticated %}
+            <a href="{% url 'store:profile' %}" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3.5 rounded-xl transition inline-flex items-center justify-center gap-2 text-xs">
+                <i class="fa-solid fa-list-check"></i> Mening buyurtmalarim tarixi
+            </a>
+            {% endif %}
+
+            {% if order.payment_status != 'paid' and order.payment_method in 'click,payme,uzum' %}
+            <a href="{% url 'store:order_pay' order.id %}" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3.5 rounded-xl transition inline-flex items-center justify-center gap-2 text-xs shadow-lg shadow-emerald-600/20">
+                <i class="fa-solid fa-credit-card"></i> Hozir onlayn to'lash
+            </a>
+            {% endif %}
+
+            <a href="{% url 'store:home' %}" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-7 py-3.5 rounded-xl transition inline-flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 text-xs glow-hover">
+                Bosh sahifaga qaytish <i class="fa-solid fa-arrow-right text-[11px]"></i>
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

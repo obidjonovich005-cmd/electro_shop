@@ -1,0 +1,17 @@
+{
+  "name": "ElectroShop — Zamonaviy Texnika Do'koni",
+  "short_name": "ElectroShop",
+  "description": "Eng so'nggi smartfonlar, noutbuklar va aqlli gadjetlar do'koni",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

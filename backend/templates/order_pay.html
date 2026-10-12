@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+
+{% block title %}To'lovni amalga oshirish — ElectroShop{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+    
+    <!-- Header: To'lov tizimi holati -->
+    <div class="text-center mb-8">
+        {% if order.payment_method == 'click' %}
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-100 text-purple-700 text-xs font-black uppercase tracking-wider mb-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-600 animate-pulse"></span>
+            Click Up To'lov Tizimi
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Click orqali xavfsiz to'lov</h1>
+        {% elif order.payment_method == 'payme' %}
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-100 text-cyan-800 text-xs font-black uppercase tracking-wider mb-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse"></span>
+            Payme To'lov Tizimi
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Payme orqali xavfsiz to'lov</h1>
+        {% elif order.payment_method == 'uzum' %}
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-100 text-violet-800 text-xs font-black uppercase tracking-wider mb-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-violet-600 animate-pulse"></span>
+            Uzum Bank To'lov Tizimi
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Uzum Bank orqali to'lov</h1>
+        {% else %}
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Buyurtma to'lovi</h1>
+        {% endif %}
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Buyurtma raqami: <strong class="text-slate-800">#{{ order.id }}</strong> • Summa: <strong class="text-indigo-600 text-base">{{ order.total_price|floatformat:0 }} so'm</strong>
+        </p>
+    </div>
+
+    <!-- Asosiy To'lov Bloki: Karta interfeysi va Forma -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Chap: Jonli Karta Vizuali -->
+        <div class="lg:col-span-5 space-y-4">
+            
+            <!-- Virtual Plastik Karta (Real vaqtda yangilanadi) -->
+            <div id="cardGraphic" class="w-full aspect-[1.58/1] rounded-3xl p-6 sm:p-7 text-white shadow-2xl relative overflow-hidden flex flex-col justify-between transition-all duration-300 {% if order.payment_method == 'click' %}bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-950 border border-purple-500/30{% elif order.payment_method == 'payme' %}bg-gradient-to-br from-cyan-900 via-teal-900 to-slate-950 border border-cyan-500/30{% else %}bg-gradient-to-br from-violet-950 via-purple-950 to-slate-950 border border-violet-500/30{% endif %}">
+                
+                <!-- Karta orqa fon bezaklari -->
+                <div class="absolute -right-12 -top-12 w-44 h-44 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -left-12 -bottom-12 w-44 h-44 bg-indigo-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+                <!-- Yuqori qator: Chip & Brend -->
+                <div class="flex items-center justify-between relative z-10">
+                    <div class="w-11 h-8 bg-gradient-to-r from-amber-300 to-amber-400 rounded-lg flex items-center justify-center shadow">
+                        <div class="w-7 h-5 border border-amber-600/50 rounded flex items-center justify-center">
+                            <i class="fa-solid fa-microchip text-amber-800 text-[11px]"></i>
+                        </div>
+                    </div>
+                    <div id="cardTypeBadge" class="px-3 py-1 rounded-xl bg-white/20 backdrop-blur text-xs font-black tracking-widest uppercase">
+                        UZCARD
+                    </div>
+                </div>
+
+                <!-- Karta Raqami (Jonli) -->
+                <div class="relative z-10 my-auto py-2">
+                    <div class="text-[10px] text-white/60 tracking-wider uppercase mb-1">Karta raqami</div>
+                    <div id="displayCardNumber" class="font-mono text-lg sm:text-xl font-bold tracking-widest select-none">
+                        8600 •••• •••• ••••
+                    </div>
+                </div>
+
+                <!-- Pastki qator: Ism va Amal qilish muddati -->
+                <div class="flex items-end justify-between relative z-10 text-xs">
+                    <div>
+                        <div class="text-[9px] text-white/60 uppercase tracking-wider mb-0.5">Karta egasi</div>
+                        <div id="displayCardHolder" class="font-bold tracking-wider uppercase line-clamp-1 max-w-[170px]">
+                            {{ order.full_name|upper|default:"ISM FAMILIYA" }}
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[9px] text-white/60 uppercase tracking-wider mb-0.5">Amal muddati</div>
+                        <div id="displayCardExpiry" class="font-mono font-bold tracking-widest">
+                            12/28
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Tezkor Sinov Kartalari (Auto-fill tugmalari) -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200">
+                <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-500"></i> Sinov uchun tezkor kartalar:
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" onclick="fillSampleCard('8600492810482914', '12/28', 'Uzcard')" 
+                            class="px-2.5 py-2 bg-slate-100 hover:bg-purple-100 hover:text-purple-700 text-slate-700 rounded-xl text-xs font-bold transition text-center">
+                        Uzcard 8600
+                    </button>
+                    <button type="button" onclick="fillSampleCard('9860241904729184', '08/29', 'Humo')" 
+                            class="px-2.5 py-2 bg-slate-100 hover:bg-cyan-100 hover:text-cyan-800 text-slate-700 rounded-xl text-xs font-bold transition text-center">
+                        Humo 9860
+                    </button>
+                    <button type="button" onclick="fillSampleCard('4278193847291048', '05/27', 'Visa')" 
+                            class="px-2.5 py-2 bg-slate-100 hover:bg-blue-100 hover:text-blue-700 text-slate-700 rounded-xl text-xs font-bold transition text-center">
+                        Visa 4278
+                    </button>
+                </div>
+            </div>
+
+            <!-- Buyurtma tovarlari -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 text-xs">
+                <span class="font-bold text-slate-700 block mb-2">Buyurtma tovarlari ({{ order.items.count }} ta):</span>
+                <div class="space-y-1.5 text-slate-600">
+                    {% for item in order.items.all %}
+                    <div class="flex justify-between items-center">
+                        <span class="line-clamp-1 flex-1">{{ item.product.name }} (x{{ item.quantity }})</span>
+                        <span class="font-bold text-slate-900 ml-2 whitespace-nowrap">{{ item.price|floatformat:0 }} so'm</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- O'ng: Karta Ma'lumotlarini Kiritish Formasi -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+            <h2 class="text-base font-black text-slate-900 mb-5 pb-3 border-b border-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-credit-card text-indigo-600"></i> Karta ma'lumotlarini kiriting
+            </h2>
+
+            <form id="paymentForm" method="POST" action="{% url 'store:order_pay' order.id %}" onsubmit="return handlePaymentSubmit(event)">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="confirm_payment">
+
+                <div class="space-y-4">
+                    
+                    <!-- Karta raqami kiritish -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Karta raqami (16 xonali) <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="inputCardNumber" name="card_number" required maxlength="19" 
+                                   placeholder="8600 0000 0000 0000" 
+                                   class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm font-mono tracking-wider font-bold text-slate-800">
+                            <i class="fa-regular fa-credit-card absolute left-4 top-3.5 text-slate-400 text-base"></i>
+                        </div>
+                    </div>
+
+                    <!-- Karta egasi va muddati -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                Amal qilish muddati <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" id="inputCardExpiry" name="card_expiry" required maxlength="5" 
+                                   placeholder="MM/YY" 
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm font-mono font-bold text-slate-800">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                Karta egasi ismi
+                            </label>
+                            <input type="text" id="inputCardHolder" name="card_holder" value="{{ order.full_name }}" 
+                                   placeholder="ISM FAMILIYA" 
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm uppercase text-slate-800">
+                        </div>
+                    </div>
+
+                    <!-- Telefon raqam (SMS kod uchun) -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            SMS-tasdiqlash uchun telefon raqami
+                        </label>
+                        <div class="relative">
+                            <input type="tel" id="inputPhone" value="{{ order.phone }}" 
+                                   class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 text-sm font-medium text-slate-800">
+                            <i class="fa-solid fa-mobile-screen absolute left-4 top-3 text-slate-400 text-sm"></i>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-1">To'lovni tasdiqlash uchun 6 xonali SMS kod shu raqamga yuboriladi.</p>
+                    </div>
+
+                    <!-- To'lov tugmasi -->
+                    <div class="pt-3">
+                        <button type="submit" id="btnPay" 
+                                class="w-full py-4 rounded-2xl font-black text-white text-sm shadow-xl transition flex items-center justify-center gap-2 glow-hover active:scale-[0.99] {% if order.payment_method == 'click' %}bg-purple-600 hover:bg-purple-500 shadow-purple-600/30{% elif order.payment_method == 'payme' %}bg-cyan-600 hover:bg-cyan-500 shadow-cyan-600/30{% else %}bg-violet-600 hover:bg-violet-500 shadow-violet-600/30{% endif %}">
+                            <i class="fa-solid fa-lock text-xs"></i> 
+                            <span>{{ order.total_price|floatformat:0 }} so'm to'lash</span>
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- Naqd pulga o'zgartirish varianti -->
+            <form method="POST" action="{% url 'store:order_pay' order.id %}" class="mt-4 pt-4 border-t border-slate-100">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="switch_to_cash">
+                <button type="submit" class="w-full text-slate-600 hover:text-slate-900 text-xs font-semibold py-2.5 border border-slate-200 hover:border-slate-300 rounded-xl transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-money-bill-wave text-emerald-600"></i> Hozir to'lamaslik, kuryer yetkazganda naqd to'lash
+                </button>
+            </form>
+
+            <div class="flex items-center justify-center gap-6 pt-4 text-slate-400 text-xs">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield text-emerald-500"></i> 3D Secure</span>
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-lock text-indigo-500"></i> SSL 256-Bit</span>
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-check text-cyan-500"></i> Uzcard & Humo</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- INTERAKTIV SMS (OTP) KOD BILAN TASDIQLASH MODALI -->
+<div id="otpModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 max-w-md w-full shadow-2xl relative">
+        
+        <button onclick="closeOtpModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="text-center mb-6">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 shadow-md shadow-emerald-500/20">
+                <i class="fa-solid fa-comment-sms"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-900">SMS orqali tasdiqlash</h3>
+            <p class="text-xs text-slate-500 mt-1.5" id="otpPhoneText">
+                Telefoningizga 6 xonali tasdiqlash kodi jo'natildi.
+            </p>
+            <div class="mt-2 inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-xl text-xs font-bold font-mono">
+                Sinov kodi: <span id="generatedCode">774 912</span>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1 text-center">SMS kodni kiriting:</label>
+                <input type="text" id="otpInput" maxlength="6" value="774912" 
+                       class="w-full text-center tracking-[8px] font-mono font-black text-2xl py-3 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20">
+            </div>
+
+            <button type="button" onclick="confirmFinalPayment()" 
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-xl shadow-lg shadow-emerald-600/30 transition text-sm flex items-center justify-center gap-2 glow-hover">
+                <i class="fa-solid fa-check"></i> To'lovni yakunlash
+            </button>
+
+            <div class="text-center text-xs text-slate-400">
+                Qayta yuborish: <span id="otpTimer" class="font-bold text-slate-600">59 soniya</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- JAVASCRIPT: Jonli Karta Formati va OTP logikasi -->
+<script>
+    const inputNumber = document.getElementById('inputCardNumber');
+    const inputExpiry = document.getElementById('inputCardExpiry');
+    const inputHolder = document.getElementById('inputCardHolder');
+    const displayNumber = document.getElementById('displayCardNumber');
+    const displayExpiry = document.getElementById('displayCardExpiry');
+    const displayHolder = document.getElementById('displayCardHolder');
+    const cardTypeBadge = document.getElementById('cardTypeBadge');
+
+    // 1. Karta raqamini formatlash va jonli ko'rsatish
+    inputNumber.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+        let formatted = value.match(/.{1,4}/g)?.join(' ') || '';
+        e.target.value = formatted;
+
+        if (value.length > 0) {
+            displayNumber.innerText = formatted;
+        } else {
+            displayNumber.innerText = '8600 •••• •••• ••••';
+        }
+
+        // Karta turini aniqlash (Uzcard, Humo, Visa, Mastercard)
+        if (value.startsWith('8600')) {
+            cardTypeBadge.innerText = 'UZCARD';
+            cardTypeBadge.className = 'px-3 py-1 rounded-xl bg-purple-500/30 backdrop-blur text-xs font-black tracking-widest uppercase text-white';
+        } else if (value.startsWith('9860')) {
+            cardTypeBadge.innerText = 'HUMO';
+            cardTypeBadge.className = 'px-3 py-1 rounded-xl bg-cyan-500/30 backdrop-blur text-xs font-black tracking-widest uppercase text-white';
+        } else if (value.startsWith('4')) {
+            cardTypeBadge.innerText = 'VISA';
+            cardTypeBadge.className = 'px-3 py-1 rounded-xl bg-blue-500/30 backdrop-blur text-xs font-black tracking-widest uppercase text-white';
+        } else if (value.startsWith('5')) {
+            cardTypeBadge.innerText = 'MASTERCARD';
+            cardTypeBadge.className = 'px-3 py-1 rounded-xl bg-orange-500/30 backdrop-blur text-xs font-black tracking-widest uppercase text-white';
+        } else {
+            cardTypeBadge.innerText = 'KARTA';
+            cardTypeBadge.className = 'px-3 py-1 rounded-xl bg-white/20 backdrop-blur text-xs font-black tracking-widest uppercase text-white';
+        }
+    });
+
+    // 2. Amal qilish muddatini formatlash
+    inputExpiry.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+        if (value.length >= 2) {
+            let month = parseInt(value.substring(0, 2));
+            if (month > 12) value = '12' + value.substring(2);
+            if (month === 0) value = '01' + value.substring(2);
+            value = value.substring(0, 2) + '/' + value.substring(2);
+        }
+        e.target.value = value;
+        displayExpiry.innerText = value || '12/28';
+    });
+
+    // 3. Karta egasi ismini ko'rsatish
+    inputHolder.addEventListener('input', function(e) {
+        displayHolder.innerText = e.target.value.toUpperCase() || 'ISM FAMILIYA';
+    });
+
+    // 4. Tezkor sinov kartasini avtomatik to'ldirish
+    function fillSampleCard(number, expiry, brand) {
+        inputNumber.value = number.match(/.{1,4}/g).join(' ');
+        inputExpiry.value = expiry;
+        displayNumber.innerText = inputNumber.value;
+        displayExpiry.innerText = expiry;
+        cardTypeBadge.innerText = brand.toUpperCase();
+        inputNumber.focus();
+    }
+
+    // 5. To'lov jo'natilganda SMS OTP modalini ochish
+    function handlePaymentSubmit(event) {
+        event.preventDefault();
+        const rawNum = inputNumber.value.replace(/\s+/g, '');
+        if (rawNum.length < 16) {
+            alert("Iltimos, 16 xonali to'liq karta raqamini kiriting!");
+            inputNumber.focus();
+            return false;
+        }
+        if (!inputExpiry.value || inputExpiry.value.length < 5) {
+            alert("Iltimos, amal qilish muddatini (MM/YY) kiriting!");
+            inputExpiry.focus();
+            return false;
+        }
+
+        // Tasodifiy 6 xonali kod yaratish
+        const randomCode = Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('generatedCode').innerText = String(randomCode).slice(0, 3) + ' ' + String(randomCode).slice(3);
+        document.getElementById('otpInput').value = randomCode;
+
+        const phoneVal = document.getElementById('inputPhone').value;
+        if (phoneVal) {
+            document.getElementById('otpPhoneText').innerText = phoneVal + " raqamiga 6 xonali kod jo'natildi.";
+        }
+
+        // Modalni ochish
+        document.getElementById('otpModal').classList.remove('hidden');
+        return false;
+    }
+
+    function closeOtpModal() {
+        document.getElementById('otpModal').classList.add('hidden');
+    }
+
+    function confirmFinalPayment() {
+        // Formani bevosita serverga submit qilish
+        document.getElementById('paymentForm').submit();
+    }
+
+    // Dastlabki sinov kartasini o'rnatish
+    fillSampleCard('8600492810482914', '12/28', 'Uzcard');
+</script>
+{% endblock %}

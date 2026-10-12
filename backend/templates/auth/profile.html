@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}Shaxsiy kabinet — ElectroShop{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Profil sarlavhasi -->
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white mb-8 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6 border border-slate-800">
+        <div class="flex items-center gap-4 text-center sm:text-left flex-col sm:flex-row">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-3xl font-black text-white shadow-lg shadow-indigo-500/30">
+                {{ user.username|slice:":1"|upper }}
+            </div>
+            <div>
+                <h1 class="text-2xl font-black text-white">{{ user.first_name|default:user.username }} {{ user.last_name|default:'' }}</h1>
+                <p class="text-xs text-indigo-300 mt-0.5">@{{ user.username }} • A'zo bo'lgan: {{ user.date_joined|date:"d.m.Y" }}</p>
+                <div class="flex items-center gap-3 mt-2 text-xs text-slate-300">
+                    {% if profile.phone %}<span><i class="fa-solid fa-phone text-indigo-400 mr-1"></i> {{ profile.phone }}</span>{% endif %}
+                    {% if user.email %}<span><i class="fa-solid fa-envelope text-indigo-400 mr-1"></i> {{ user.email }}</span>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a href="{% url 'store:logout' %}" class="bg-slate-800 hover:bg-rose-600 border border-slate-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition flex items-center gap-2">
+                <i class="fa-solid fa-right-from-bracket"></i> Tizimdan chiqish
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Chap tomon: Ma'lumotlarni tahrirlash -->
+        <div class="lg:col-span-4 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+            <h2 class="text-base font-extrabold text-slate-900 mb-4 pb-3 border-b border-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-user-pen text-indigo-600"></i> Ma'lumotlarni yangilash
+            </h2>
+
+            <form method="POST" action="{% url 'store:profile' %}" class="space-y-4">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Ism</label>
+                    <input type="text" name="first_name" value="{{ user.first_name }}" placeholder="Ismingiz" 
+                           class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 text-xs">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Familiya</label>
+                    <input type="text" name="last_name" value="{{ user.last_name }}" placeholder="Familiyangiz" 
+                           class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 text-xs">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Telefon raqam</label>
+                    <input type="tel" name="phone" value="{{ profile.phone|default:'' }}" placeholder="+998 90 123 45 67" 
+                           class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 text-xs">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
+                    <input type="email" name="email" value="{{ user.email }}" placeholder="elektron@pochta.uz" 
+                           class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 text-xs">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Doimiy yetkazib berish manzili</label>
+                    <textarea name="address" rows="2" placeholder="Shahar, ko'cha, uy raqami..." 
+                              class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-indigo-500 text-xs">{{ profile.address|default:'' }}</textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Saqlash
+                </button>
+            </form>
+        </div>
+
+        <!-- O'ng tomon: Buyurtmalar tarixi -->
+        <div class="lg:col-span-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-box-archive text-indigo-600"></i> Mening buyurtmalarim tarixi
+                </h2>
+                <span class="text-xs font-bold text-slate-500 bg-white px-3 py-1.5 rounded-xl border border-slate-200">
+                    Jami {{ orders.count }} ta buyurtma
+                </span>
+            </div>
+
+            {% if orders %}
+            <div class="space-y-4">
+                {% for ord in orders %}
+                <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm hover:border-indigo-200 transition">
+                    
+                    <!-- Buyurtma bosh qismi -->
+                    <div class="flex flex-wrap items-center justify-between pb-4 border-b border-slate-100 gap-3">
+                        <div>
+                            <span class="text-xs text-slate-400 block font-medium">{{ ord.created_at|date:"d-F, Y | H:i" }}</span>
+                            <span class="font-mono font-black text-slate-900 text-base">Buyurtma #{{ ord.id }}</span>
+                        </div>
+
+                        <!-- Holat va To'lov belgilari -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Buyurtma statusi -->
+                            {% if ord.status == 'delivered' %}
+                            <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-3 py-1 rounded-full">
+                                <i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Yetkazildi
+                            </span>
+                            {% elif ord.status == 'canceled' %}
+                            <span class="bg-rose-100 text-rose-800 text-[11px] font-bold px-3 py-1 rounded-full">
+                                Bekor qilingan
+                            </span>
+                            {% elif ord.status == 'confirmed' %}
+                            <span class="bg-indigo-100 text-indigo-800 text-[11px] font-bold px-3 py-1 rounded-full">
+                                <i class="fa-solid fa-thumbs-up mr-1 text-indigo-600"></i> Tasdiqlangan
+                            </span>
+                            {% else %}
+                            <span class="bg-blue-100 text-blue-800 text-[11px] font-bold px-3 py-1 rounded-full">
+                                Yangi buyurtma
+                            </span>
+                            {% endif %}
+
+                            <!-- To'lov holati -->
+                            {% if ord.payment_status == 'paid' %}
+                            <span class="bg-emerald-50 text-emerald-700 text-[11px] font-extrabold px-2.5 py-1 rounded-lg border border-emerald-200">
+                                {{ ord.get_payment_method_display }}: To'langan
+                            </span>
+                            {% else %}
+                            <span class="bg-amber-50 text-amber-700 text-[11px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-200">
+                                {{ ord.get_payment_method_display }}: Kutilmoqda
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Buyurtma tovarlari -->
+                    <div class="py-4 space-y-2.5">
+                        {% for itm in ord.items.all %}
+                        <div class="flex items-center justify-between text-xs sm:text-sm text-slate-700">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-slate-950 p-1 flex items-center justify-center flex-shrink-0">
+                                    {% if itm.product.image %}
+                                    <img src="{{ itm.product.image.url }}" alt="{{ itm.product.name }}" class="max-h-full max-w-full object-contain">
+                                    {% else %}
+                                    <i class="fa-solid fa-image text-slate-700 text-[10px]"></i>
+                                    {% endif %}
+                                </div>
+                                <span class="font-medium line-clamp-1">{{ itm.product.name }}</span>
+                                <span class="text-slate-400 font-bold">x{{ itm.quantity }}</span>
+                            </div>
+                            <span class="font-bold text-slate-900 ml-3 whitespace-nowrap">{{ itm.price|floatformat:0 }} so'm</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Buyurtma pastki qismi: Summa va harakatlar -->
+                    <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                        <div class="text-xs text-slate-500">
+                            Manzil: <strong class="text-slate-800">{{ ord.address|truncatechars:35 }}</strong>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-semibold text-slate-600">Jami:</span>
+                            <span class="text-lg font-black text-indigo-600">{{ ord.total_price|floatformat:0 }} so'm</span>
+
+                            {% if ord.payment_status != 'paid' and ord.payment_method in 'click,payme,uzum' %}
+                            <a href="{% url 'store:order_pay' ord.id %}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition shadow-md shadow-emerald-600/20">
+                                To'lash <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center">
+                <div class="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-800">Sizda hali buyurtmalar yo'q</h3>
+                <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                    Katalogimizdan kerakli gadjetni tanlang va qulay to'lov bilan buyurtma bering!
+                </p>
+                <a href="{% url 'store:home' %}" class="inline-block mt-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition">
+                    Xarid qilish
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

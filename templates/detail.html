@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} narxi, xususiyatlari va sotib olish — ElectroShop{% endblock %}
+
+{% block meta_description %}{{ product.name }} Toshkentda arzon narxda sotib olish. Narxi: {{ product.current_price|floatformat:0 }} so'm. {{ product.description|truncatewords:20 }} 1 yillik kafolat, bepul yetkazib berish.{% endblock %}
+
+{% block meta_keywords %}{{ product.name }} narxi, {{ product.name }} sotib olish, {{ product.brand }} Toshkent, {{ product.category.name }}, O'zbekiston, kafolat, kredit, muddatli to'lov{% endblock %}
+
+{% block og_title %}{{ product.name }} — ElectroShop{% endblock %}
+{% block og_description %}{{ product.description|truncatewords:25 }}{% endblock %}
+{% block og_type %}product{% endblock %}
+
+{% block extra_meta %}
+{% if product.image %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}">
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}">
+{% endif %}
+
+<!-- Schema.org Product JSON-LD for Google Rich Results -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.name }}",
+  {% if product.image %}"image": ["{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"],{% endif %}
+  "description": "{{ product.description|escapejs }}",
+  "sku": "EL-{{ product.id }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ product.brand|default:'ElectroShop' }}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ product.rating|default:'4.9' }}",
+    "reviewCount": "{{ product.reviews_count|default:'18' }}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri }}",
+    "priceCurrency": "UZS",
+    "price": "{{ product.current_price|floatformat:0 }}",
+    "priceValidUntil": "2027-12-31",
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+  }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Orqaga qaytish -->
+    <a href="{% url 'store:home' %}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-indigo-600 transition mb-6 bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm">
+        <i class="fa-solid fa-arrow-left text-[11px]"></i> Katalogga qaytish
+    </a>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-10 shadow-sm">
+        
+        <!-- Chap: Rasm -->
+        <div class="lg:col-span-5 bg-gradient-to-b from-slate-900 to-slate-950 rounded-3xl p-8 flex items-center justify-center aspect-square relative overflow-hidden border border-slate-800">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-500">
+            {% else %}
+            <div class="text-slate-500 flex flex-col items-center">
+                <i class="fa-solid fa-image text-5xl mb-2 text-slate-700"></i>
+                <span class="text-xs">Rasm mavjud emas</span>
+            </div>
+            {% endif %}
+
+            {% if product.discount_percent > 0 %}
+            <span class="absolute top-4 left-4 bg-gradient-to-r from-rose-600 to-red-500 text-white text-xs font-black px-3.5 py-1.5 rounded-xl shadow-lg">
+                -{{ product.discount_percent }}% Chegirma
+            </span>
+            {% endif %}
+
+            {% if product.brand %}
+            <span class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur border border-slate-700 text-slate-200 text-xs font-bold px-3 py-1 rounded-xl">
+                {{ product.brand }}
+            </span>
+            {% endif %}
+        </div>
+
+        <!-- O'ng: Tovar ma'lumotlari -->
+        <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
+            <div class="space-y-4">
+                
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-xl uppercase tracking-wide border border-indigo-100">
+                        {{ product.category.name }}
+                    </span>
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-amber-500 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-100">
+                        <i class="fa-solid fa-star"></i>
+                        <span>{{ product.rating|default:"4.9" }}</span>
+                        <span class="text-slate-400 font-normal">({{ product.reviews_count|default:"18" }} ta baho)</span>
+                    </div>
+                </div>
+
+                <h1 class="text-2xl sm:text-4xl font-black text-slate-900 leading-tight">
+                    {{ product.name }}
+                </h1>
+
+                <!-- Narxlar -->
+                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 flex flex-wrap items-center gap-4">
+                    {% if product.discount_price and product.discount_price < product.price %}
+                    <div>
+                        <div class="text-xs text-slate-400 line-through">{{ product.price|floatformat:0 }} so'm</div>
+                        <div class="text-2xl sm:text-3xl font-black text-rose-600">{{ product.discount_price|floatformat:0 }} so'm</div>
+                    </div>
+                    <span class="bg-rose-100 text-rose-700 text-xs font-black px-3 py-1 rounded-xl">Aksiya narxi</span>
+                    {% else %}
+                    <div class="text-2xl sm:text-3xl font-black text-slate-900">{{ product.price|floatformat:0 }} so'm</div>
+                    {% endif %}
+                </div>
+
+                <!-- Tavsif -->
+                <div>
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Mahsulot tavsifi:</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">{{ product.description }}</p>
+                </div>
+
+                <!-- Xususiyatlari (Specs) -->
+                {% if product.specs %}
+                <div>
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Texnik xususiyatlari:</h3>
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs text-slate-700 font-mono whitespace-pre-line leading-relaxed">
+                        {{ product.specs }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Imtiyozlar bloki (Delivery & Warranty) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-center">
+                        <i class="fa-solid fa-truck-fast text-emerald-600 text-base mb-1"></i>
+                        <div class="text-xs font-bold text-slate-800">1 kunda yetkazish</div>
+                        <div class="text-[10px] text-slate-400">Butun O'zbekiston</div>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-center">
+                        <i class="fa-solid fa-shield-check text-indigo-600 text-base mb-1"></i>
+                        <div class="text-xs font-bold text-slate-800">1 Yil Kafolat</div>
+                        <div class="text-[10px] text-slate-400">Rasmiy servis markazi</div>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-center col-span-2 sm:col-span-1">
+                        <i class="fa-solid fa-rotate-left text-cyan-600 text-base mb-1"></i>
+                        <div class="text-xs font-bold text-slate-800">14 kun qaytarish</div>
+                        <div class="text-[10px] text-slate-400">Benuqson mahsulot</div>
+                    </div>
+                </div>
+
+                <!-- Ombordagi holat -->
+                <div class="flex items-center gap-2 text-xs font-bold pt-1">
+                    {% if product.stock > 0 %}
+                    <span class="text-emerald-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check"></i> Omborda mavjud ({{ product.stock }} dona)
+                    </span>
+                    {% else %}
+                    <span class="text-rose-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-xmark"></i> Hozirda sotuvda tugagan
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Savatga qo'shish tugmasi -->
+            <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
+                {% if product.stock > 0 %}
+                <a href="{% url 'store:cart_add' product.id %}" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-4 px-6 rounded-2xl font-black flex items-center justify-center gap-2 shadow-xl shadow-indigo-600/30 transition text-sm glow-hover active:scale-[0.99]">
+                    <i class="fa-solid fa-cart-shopping"></i> Savatchaga qo'shish
+                </a>
+                {% else %}
+                <button disabled class="flex-1 bg-slate-100 text-slate-400 py-4 px-6 rounded-2xl font-bold flex items-center justify-center gap-2 cursor-not-allowed text-sm">
+                    <i class="fa-solid fa-ban"></i> Mahsulot omborda qolmagan
+                </button>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- O'xshash tovarlar -->
+    {% if related_products %}
+    <div class="mt-16">
+        <h2 class="text-xl font-black text-slate-900 mb-6">O'xshash gadjetlar</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {% for item in related_products %}
+            <a href="{% url 'store:product_detail' item.slug %}" class="bg-white p-4 rounded-3xl border border-slate-200 hover:border-indigo-400 hover:shadow-xl transition group block">
+                <div class="bg-slate-950 rounded-2xl aspect-square p-3 mb-3 flex items-center justify-center">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300">
+                    {% else %}
+                    <span class="text-slate-500 text-xs">Rasm yo'q</span>
+                    {% endif %}
+                </div>
+                <h4 class="text-xs font-bold text-slate-800 line-clamp-1 group-hover:text-indigo-600 transition">{{ item.name }}</h4>
+                <div class="text-sm font-black text-slate-900 mt-1">{{ item.current_price|floatformat:0 }} so'm</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

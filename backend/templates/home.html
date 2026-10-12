@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- 1. HERO SECTION (High-Tech Gradient Banner) -->
+<div class="relative overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white py-14 sm:py-20 border-b border-slate-800">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-7 space-y-5 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    2026 Yangi Flagman Kolleksiyasi
+                </div>
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                    Aqlli texnologiyalar <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-cyan-400 bg-clip-text text-transparent">bitta joyda</span>
+                </h1>
+                <p class="text-slate-300 text-sm sm:text-base max-w-xl leading-relaxed mx-auto lg:mx-0">
+                    Apple, Samsung, ASUS va yetakchi jahon brendlarining original gadjetlari. Kafolat, tezkor yetkazish va muddatli to'lov imkoniyati bilan.
+                </p>
+                <div class="pt-2 flex flex-wrap gap-3 justify-center lg:justify-start">
+                    <a href="#catalog" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3.5 rounded-2xl font-bold transition shadow-lg shadow-indigo-600/30 flex items-center gap-2 text-sm glow-hover">
+                        <i class="fa-solid fa-bolt"></i> Mahsulotlarni ko'rish
+                    </a>
+                    <a href="?discount=1#catalog" class="bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-200 px-6 py-3.5 rounded-2xl font-semibold transition text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-rose-400"></i> Maxsus chegirmalar
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Highlights Cards -->
+            <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+                <div class="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl backdrop-blur">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="font-bold text-white text-base">100% Original</div>
+                    <div class="text-xs text-slate-400 mt-1">1 yillik rasmiy servis kafolati</div>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl backdrop-blur">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <div class="font-bold text-white text-base">1 Kunda Yetkazish</div>
+                    <div class="text-xs text-slate-400 mt-1">Butun O'zbekiston bo'ylab</div>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl backdrop-blur">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <div class="font-bold text-white text-base">Qulay To'lov</div>
+                    <div class="text-xs text-slate-400 mt-1">Click, Payme, Uzum & Naqd</div>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl backdrop-blur">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <div class="font-bold text-white text-base">Aksiya va Bonus</div>
+                    <div class="text-xs text-slate-400 mt-1">Har bir xaridga sovg'alar</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 2. KATEGORIYALAR TEZKOR TUGMALARI -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-200/80 p-3 sm:p-4 flex items-center gap-2 overflow-x-auto scrollbar-none">
+        <a href="{% url 'store:home' %}" 
+           class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-2 {% if not category %}bg-indigo-600 text-white shadow-md shadow-indigo-600/20{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
+            <i class="fa-solid fa-grid-2"></i> Barcha toifalar
+        </a>
+        {% for cat in categories %}
+        <a href="{% url 'store:category_products' cat.slug %}" 
+           class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 {% if category and category.slug == cat.slug %}bg-indigo-600 text-white shadow-md shadow-indigo-600/20{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}">
+            <span>{{ cat.name }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- 3. ASOSIY MAHSULOTLAR VA FILTR BLOKI -->
+<div id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+
+    <!-- Qidiruv / Holat natijasi xabari -->
+    {% if query %}
+    <div class="mb-6 p-4 bg-indigo-50/80 border border-indigo-100 rounded-2xl flex items-center justify-between">
+        <div class="text-sm text-indigo-900 flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass text-indigo-600"></i>
+            <span><strong>"{{ query }}"</strong> bo'yicha topildi: <strong>{{ products.count }}</strong> ta mahsulot</span>
+        </div>
+        <a href="{% url 'store:home' %}" class="text-xs bg-white text-indigo-600 px-3 py-1.5 rounded-xl border border-indigo-200 font-bold hover:bg-indigo-50">
+            Tozalash
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- YON PANEL: FILTRLAR (Desktop & Mobile) -->
+        <aside class="lg:col-span-1 space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm sticky top-28">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-indigo-600"></i> Filtrlar
+                    </h3>
+                    {% if min_price or max_price or selected_brands or in_stock or discount_only or sort != 'newest' %}
+                    <a href="{% if category %}{% url 'store:category_products' category.slug %}{% else %}{% url 'store:home' %}{% endif %}" 
+                       class="text-xs text-rose-500 hover:text-rose-700 font-bold">
+                        Barchasini bekor qilish
+                    </a>
+                    {% endif %}
+                </div>
+
+                <form method="GET" action="{% if category %}{% url 'store:category_products' category.slug %}{% else %}{% url 'store:home' %}{% endif %}" class="space-y-6 mt-4">
+                    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+
+                    <!-- Saralash (Sorting) -->
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
+                            <i class="fa-solid fa-arrow-down-wide-short text-indigo-500 mr-1"></i> Saralash
+                        </label>
+                        <select name="sort" onchange="this.form.submit()" 
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-700 focus:outline-none focus:border-indigo-500">
+                            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Eng yangilari</option>
+                            <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Narxi: Arzonidan qimmatiga</option>
+                            <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Narxi: Qimmatidan arzoniga</option>
+                            <option value="name_asc" {% if sort == 'name_asc' %}selected{% endif %}>Nomi: A - Z</option>
+                            <option value="popular" {% if sort == 'popular' %}selected{% endif %}>Ommabop / Yuqori baholangan</option>
+                        </select>
+                    </div>
+
+                    <!-- Narx oralig'i filtri -->
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
+                            <i class="fa-solid fa-coins text-indigo-500 mr-1"></i> Narxi (so'm)
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" name="min_price" value="{{ min_price }}" placeholder="Dan" 
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500">
+                            <input type="number" name="max_price" value="{{ max_price }}" placeholder="Gacha" 
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500">
+                        </div>
+                    </div>
+
+                    <!-- Brendlar filtri -->
+                    {% if available_brands %}
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2.5">
+                            <i class="fa-solid fa-trademark text-indigo-500 mr-1"></i> Brend
+                        </label>
+                        <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                            {% for brand_name in available_brands %}
+                            <label class="flex items-center gap-2.5 text-xs text-slate-700 cursor-pointer select-none hover:text-indigo-600 transition">
+                                <input type="checkbox" name="brand" value="{{ brand_name }}" 
+                                       {% if brand_name in selected_brands %}checked{% endif %}
+                                       class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                                <span>{{ brand_name }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Holat belgilari (Checkboxlar) -->
+                    <div class="pt-3 border-t border-slate-100 space-y-2.5">
+                        <label class="flex items-center gap-2.5 text-xs text-slate-700 cursor-pointer select-none">
+                            <input type="checkbox" name="in_stock" value="1" {% if in_stock %}checked{% endif %}
+                                   class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                            <span class="font-medium">Faqat omborda borlari</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 text-xs text-slate-700 cursor-pointer select-none">
+                            <input type="checkbox" name="discount" value="1" {% if discount_only %}checked{% endif %}
+                                   class="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 border-slate-300">
+                            <span class="font-medium text-rose-600">Faqat aksiyadagilar (Chegirma)</span>
+                        </label>
+                    </div>
+
+                    <!-- Tugma -->
+                    <button type="submit" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-filter"></i> Filtrlarni qo'llash
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- O'NG TOMON: MAHSULOTLAR RO'YXATI -->
+        <div class="lg:col-span-3">
+            
+            <!-- Yuqori qator: Natijalar soni va Saralash holati -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+                <div class="text-xs sm:text-sm text-slate-600 font-semibold">
+                    Ko'rsatilmoqda: <span class="text-indigo-600 font-bold">{{ products.count }}</span> ta tovar
+                    {% if category %}<span class="text-slate-400">| Toifa: {{ category.name }}</span>{% endif %}
+                </div>
+
+                <!-- Faol filtr belgilari -->
+                <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                    {% if min_price or max_price %}
+                    <span class="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg font-medium border border-indigo-200">
+                        {{ min_price|default:"0" }} - {{ max_price|default:"∞" }} so'm
+                    </span>
+                    {% endif %}
+                    {% for b in selected_brands %}
+                    <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg font-medium border border-slate-200">
+                        {{ b }}
+                    </span>
+                    {% endfor %}
+                    {% if discount_only %}
+                    <span class="bg-rose-50 text-rose-600 px-2.5 py-1 rounded-lg font-bold border border-rose-200">
+                        Aksiya
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Tovarlar to'plami (Grid) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {% for item in products %}
+                <div class="bg-white rounded-3xl border border-slate-200 hover:border-indigo-400 hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden group relative">
+                    
+                    <!-- Rasm qismi -->
+                    <div class="relative bg-gradient-to-b from-slate-900 to-slate-950 aspect-square overflow-hidden flex items-center justify-center p-5">
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" 
+                             class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 ease-out">
+                        {% else %}
+                        <div class="text-slate-500 text-sm flex flex-col items-center">
+                            <i class="fa-solid fa-box text-3xl mb-1 text-slate-700"></i>
+                            <span>Rasm yo'q</span>
+                        </div>
+                        {% endif %}
+
+                        <!-- Chegirma foizi belgisi -->
+                        {% if item.discount_percent > 0 %}
+                        <span class="absolute top-3 left-3 bg-gradient-to-r from-rose-600 to-red-500 text-white text-[11px] font-black px-2.5 py-1 rounded-xl shadow-lg">
+                            -{{ item.discount_percent }}%
+                        </span>
+                        {% endif %}
+
+                        <!-- Brend belgisi -->
+                        {% if item.brand %}
+                        <span class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur border border-slate-700 text-slate-200 text-[10px] font-bold px-2.5 py-1 rounded-lg">
+                            {{ item.brand }}
+                        </span>
+                        {% endif %}
+
+                        <!-- Omborda tugagan holati -->
+                        {% if item.stock <= 0 %}
+                        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center">
+                            <span class="bg-rose-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl uppercase tracking-wider">
+                                Sotuvda tugagan
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Ma'lumot qismi -->
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between text-xs mb-1.5">
+                                <span class="text-indigo-600 font-bold tracking-wide uppercase text-[11px]">{{ item.category.name }}</span>
+                                <div class="flex items-center text-amber-400 gap-1 text-[11px] font-bold">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>{{ item.rating|default:"4.9" }}</span>
+                                </div>
+                            </div>
+
+                            <h3 class="font-extrabold text-slate-900 text-base line-clamp-2 group-hover:text-indigo-600 transition">
+                                <a href="{% url 'store:product_detail' item.slug %}">{{ item.name }}</a>
+                            </h3>
+
+                            <p class="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">
+                                {{ item.description }}
+                            </p>
+                        </div>
+
+                        <!-- Narx va tugmalar -->
+                        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <div>
+                                {% if item.discount_price and item.discount_price < item.price %}
+                                <div class="text-[11px] text-slate-400 line-through">{{ item.price|floatformat:0 }} so'm</div>
+                                <div class="text-base sm:text-lg font-black text-rose-600">{{ item.discount_price|floatformat:0 }} so'm</div>
+                                {% else %}
+                                <div class="text-base sm:text-lg font-black text-slate-900">{{ item.price|floatformat:0 }} so'm</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <a href="{% url 'store:product_detail' item.slug %}" 
+                                   class="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition flex items-center justify-center text-xs"
+                                   title="Batafsil ko'rish">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                                {% if item.stock > 0 %}
+                                <a href="{% url 'store:cart_add' item.id %}" 
+                                   class="p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition flex items-center justify-center text-xs shadow-md shadow-indigo-600/20 active:scale-95"
+                                   title="Savatchaga qo'shish">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-20 bg-white rounded-3xl border border-slate-200">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 text-2xl mx-auto mb-3">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800">Hech qanday mahsulot topilmadi</h3>
+                    <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Filtrlarni yoki qidiruv so'zini o'zgartirib qayta ko'ring.</p>
+                    <a href="{% url 'store:home' %}" class="inline-block mt-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                        Barcha tovarlarni ko'rsatish
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
