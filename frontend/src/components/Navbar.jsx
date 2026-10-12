@@ -26,7 +26,7 @@ const Navbar = ({
   return (
     <header className="sticky top-0 z-50 glass-panel" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
       {/* Top micro bar */}
-      <div style={{ 
+      <div className="navbar-topbar" style={{ 
         background: 'rgba(99, 102, 241, 0.08)', 
         borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
         fontSize: '0.8rem',
@@ -54,7 +54,7 @@ const Navbar = ({
       </div>
 
       {/* Main header row */}
-      <div style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
+      <div className="navbar-main-row" style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
         {/* Brand Logo */}
         <div 
           onClick={() => onSelectCategory(null)}
@@ -110,7 +110,7 @@ const Navbar = ({
         </div>
 
         {/* Global Search Bar */}
-        <div style={{ flex: 1, maxWidth: 580, position: 'relative' }}>
+        <div className="navbar-search-box" style={{ flex: 1, maxWidth: 580, position: 'relative' }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',

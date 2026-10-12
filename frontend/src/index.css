@@ -483,16 +483,35 @@ body {
   }
 }
 
-@media (max-width: 640px) {
+/* Mobil telefonlarda karta to'liq va chiroyli chiqishi uchun 1 qatorga 1 ta karta */
+@media (max-width: 680px) {
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
   }
 }
 
-@media (max-width: 380px) {
-  .products-grid {
-    grid-template-columns: 1fr;
+/* Horizontal overflow (yonga surilish) ni butunlay yo'qotish */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}
+
+/* Navbar mobil versiyasi */
+@media (max-width: 860px) {
+  .navbar-topbar {
+    display: none !important;
+  }
+  .navbar-main-row {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    padding: 10px 14px !important;
+  }
+  .navbar-search-box {
+    order: 3 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
