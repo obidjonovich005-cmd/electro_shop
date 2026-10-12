@@ -3,6 +3,8 @@ import { ShoppingBag, Heart, Star, Check, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../services/api';
 
+import { getProductImage } from '../utils/productImages';
+
 const ProductCard = ({ product, onOpenDetail }) => {
   const { addToCart, toggleWishlist, isWishlisted } = useCart();
   const [added, setAdded] = useState(false);
@@ -26,6 +28,7 @@ const ProductCard = ({ product, onOpenDetail }) => {
       : 0);
 
   const currentPrice = product.current_price || (product.discount_price || product.price);
+  const imageUrl = getProductImage(product);
 
   return (
     <div 
@@ -96,11 +99,11 @@ const ProductCard = ({ product, onOpenDetail }) => {
         padding: 10
       }}>
         <img
-          src={product.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400'}
+          src={imageUrl}
           alt={product.name}
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400';
+            e.target.src = imageUrl;
           }}
           style={{
             maxHeight: '100%',

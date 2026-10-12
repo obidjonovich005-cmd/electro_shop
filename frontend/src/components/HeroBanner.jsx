@@ -175,11 +175,11 @@ const HeroBanner = ({ onExploreDiscount, onExploreCategory }) => {
               marginBottom: 16
             }}>
               <img 
-                src="/media/products/iphone-15-pro-max-256gb_ZSLB2d3.jpg" 
+                src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&auto=format&fit=crop&q=80" 
                 alt="iPhone 15 Pro Max"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500';
+                  e.target.src = 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&auto=format&fit=crop&q=80';
                 }}
                 style={{ 
                   maxHeight: '85%', 

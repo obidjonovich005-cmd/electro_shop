@@ -3,6 +3,8 @@ import { X, Star, ShoppingBag, ShieldCheck, Truck, RotateCcw, Check, Heart, Cpu 
 import { useCart } from '../context/CartContext';
 import { fetchProductDetail, formatPrice } from '../services/api';
 
+import { getProductImage } from '../utils/productImages';
+
 const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedInstallment }) => {
   const { addToCart, toggleWishlist, isWishlisted, openCart } = useCart();
   const [data, setData] = useState(null);
@@ -30,6 +32,7 @@ const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedIn
   const product = data?.product;
   const related = data?.related || [];
   const wishlisted = product ? isWishlisted(product.id) : false;
+  const detailImageUrl = getProductImage(product);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -105,11 +108,11 @@ const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedIn
                   position: 'relative'
                 }}>
                   <img
-                    src={product.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500'}
+                    src={detailImageUrl}
                     alt={product.name}
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500';
+                      e.target.src = detailImageUrl;
                     }}
                     style={{
                       maxHeight: '90%',
