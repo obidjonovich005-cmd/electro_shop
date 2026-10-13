@@ -559,6 +559,28 @@ body {
   }
 }
 
+/* Checkout Modal Responsive */
+.checkout-modal-card {
+  padding: 32px !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .checkout-modal-card {
+    padding: 18px 14px !important;
+    border-radius: var(--radius-lg) !important;
+  }
+  .checkout-summary-footer {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  .checkout-submit-btn {
+    width: 100% !important;
+  }
+}
+
 /* Category Pills Bar */
 .navbar-category-bar {
   width: 100%;

@@ -3,6 +3,7 @@ import { X, Heart, ShoppingBag, Trash2, ArrowRight, Sparkles, Check } from 'luci
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../services/api';
 import { useState } from 'react';
+import { getProductImage } from '../utils/productImages';
 
 const WishlistItem = ({ product, onAddToCart, onRemove }) => {
   const [added, setAdded] = useState(false);
@@ -43,9 +44,9 @@ const WishlistItem = ({ product, onAddToCart, onRemove }) => {
         position: 'relative',
       }}>
         <img
-          src={product.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200'}
+          src={getProductImage(product)}
           alt={product.name}
-          onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200'; }}
+          onError={(e) => { e.target.onerror = null; e.target.src = getProductImage(product); }}
           style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
         />
         {discountPercent > 0 && (

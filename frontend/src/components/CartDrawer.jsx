@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Trash2, ShoppingBag, Plus, Minus, ArrowRight, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../services/api';
+import { getProductImage } from '../utils/productImages';
 
 const CartDrawer = ({ onProceedCheckout }) => {
   const { cart, isCartOpen, closeCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount } = useCart();
@@ -140,8 +141,12 @@ const CartDrawer = ({ onProceedCheckout }) => {
                     padding: 4
                   }}>
                     <img 
-                      src={product.image} 
+                      src={getProductImage(product)} 
                       alt={product.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = getProductImage(product);
+                      }}
                       style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
                     />
                   </div>

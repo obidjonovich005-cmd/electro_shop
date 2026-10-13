@@ -263,9 +263,9 @@ const CheckoutModal = ({ isOpen, onClose, onOrderSuccess, initialInstallmentPlan
   return (
     <div className="modal-backdrop" onClick={onClose} style={{ zIndex: 1030 }}>
       <div
-        className="modal-content"
+        className="modal-content checkout-modal-card"
         onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: step === 'payment' ? 560 : 660, padding: 32, position: 'relative' }}
+        style={{ maxWidth: step === 'payment' ? 560 : 660, position: 'relative' }}
       >
         {/* Yopish tugmasi */}
         <button
@@ -536,6 +536,7 @@ const CheckoutModal = ({ isOpen, onClose, onOrderSuccess, initialInstallmentPlan
 
               {/* Jami va Tasdiqlash tugmasi */}
               <div
+                className="checkout-summary-footer"
                 style={{
                   padding: '14px 18px',
                   background: 'rgba(15, 23, 42, 0.8)',
@@ -546,25 +547,26 @@ const CheckoutModal = ({ isOpen, onClose, onOrderSuccess, initialInstallmentPlan
                   alignItems: 'center',
                   marginTop: 4,
                   gap: 16,
+                  flexWrap: 'wrap',
                 }}
               >
-                <div>
-                  <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 2 }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 2 }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                       Yetkazib berish:{' '}
                       <strong style={{ color: deliveryFee === 0 && region ? '#34d399' : '#cbd5e1' }}>
                         {!region ? "Viloyat tanlanganda" : deliveryFee === 0 ? "Bepul 🎉" : formatPrice(deliveryFee)}
                       </strong>
                     </span>
                   </div>
-                  <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-display)' }}>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-display)', whiteSpace: 'nowrap' }}>
                     {formatPrice(finalTotal)}
                   </div>
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-primary"
+                  className="btn btn-primary checkout-submit-btn"
                   style={{ padding: '12px 24px', fontSize: '0.95rem', whiteSpace: 'nowrap' }}
                 >
                   {loading ? (
