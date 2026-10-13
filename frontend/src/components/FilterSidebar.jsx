@@ -23,7 +23,7 @@ const FilterSidebar = ({
   totalResults = 0
 }) => {
   return (
-    <aside style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <aside style={{ width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Header */}
       <div style={{
         display: 'flex',
@@ -174,7 +174,7 @@ const FilterSidebar = ({
         <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', marginBottom: 10 }}>
           Narx oralig'i (so'm)
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 10 }}>
           <div>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Dan:</span>
             <input

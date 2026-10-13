@@ -40,7 +40,12 @@ const ProductCard = ({ product, onOpenDetail }) => {
         padding: 16,
         cursor: 'pointer',
         position: 'relative',
-        height: '100%'
+        height: '100%',
+        minWidth: 0,
+        width: '100%',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        boxSizing: 'border-box'
       }}
     >
       {/* Top badges & Wishlist */}
@@ -74,7 +79,8 @@ const ProductCard = ({ product, onOpenDetail }) => {
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            transition: 'all 0.2s ease',
+            flexShrink: 0
           }}
           title={wishlisted ? "Sevimlilardan o'chirish" : "Sevimlilarga qo'shish"}
         >
@@ -96,7 +102,9 @@ const ProductCard = ({ product, onOpenDetail }) => {
         justifyContent: 'center',
         overflow: 'hidden',
         marginBottom: 16,
-        padding: 10
+        padding: 10,
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <img
           src={imageUrl}
@@ -132,14 +140,16 @@ const ProductCard = ({ product, onOpenDetail }) => {
       <h3 style={{
         fontSize: '0.98rem',
         fontWeight: 600,
-        color: '#ffffff',
+        color: 'var(--text-main)',
         marginBottom: 8,
         lineHeight: 1.35,
         display: '-webkit-box',
         WebkitLineClamp: 2,
         WebkitBoxOrient: 'vertical',
         overflow: 'hidden',
-        minHeight: '2.7em'
+        minHeight: '2.7em',
+        wordBreak: 'break-word',
+        minWidth: 0
       }}>
         {product.name}
       </h3>
@@ -152,21 +162,33 @@ const ProductCard = ({ product, onOpenDetail }) => {
           marginBottom: 14,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          textOverflow: 'ellipsis',
+          minWidth: 0,
+          maxWidth: '100%'
         }}>
           {product.specs}
         </div>
       )}
 
       {/* Price & Add to Cart button */}
-      <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 10 }}>
-        <div>
+      <div style={{
+        marginTop: 'auto',
+        paddingTop: 12,
+        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 8,
+        flexWrap: 'wrap',
+        minWidth: 0
+      }}>
+        <div style={{ minWidth: 0, flex: '1 1 auto' }}>
           {discountPercent > 0 && (
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textDecoration: 'line-through' }}>
               {formatPrice(product.price)}
             </div>
           )}
-          <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-display)' }}>
+          <div style={{ fontSize: '1.12rem', fontWeight: 800, color: 'var(--text-main)', fontFamily: 'var(--font-display)', whiteSpace: 'nowrap' }}>
             {formatPrice(currentPrice)}
           </div>
         </div>
@@ -176,21 +198,22 @@ const ProductCard = ({ product, onOpenDetail }) => {
           disabled={product.stock <= 0}
           className={`btn ${added ? 'btn-cyan' : 'btn-primary'}`}
           style={{
-            padding: '8px 14px',
+            padding: '8px 12px',
             borderRadius: 'var(--radius-md)',
             fontSize: '0.82rem',
             opacity: product.stock <= 0 ? 0.5 : 1,
-            cursor: product.stock <= 0 ? 'not-allowed' : 'pointer'
+            cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
+            flexShrink: 0
           }}
           title="Savatga qo'shish"
         >
           {added ? (
             <>
-              <Check size={16} /> Qo'shildi
+              <Check size={15} /> Qo'shildi
             </>
           ) : (
             <>
-              <ShoppingBag size={16} /> Savat
+              <ShoppingBag size={15} /> Savat
             </>
           )}
         </button>

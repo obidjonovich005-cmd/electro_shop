@@ -322,15 +322,17 @@ const Navbar = ({
       </div>
 
       {/* Category Pills Bar */}
-      <div style={{ 
-        borderTop: theme === 'light' ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.08)',
-        background: theme === 'light' ? '#f8fafc' : 'rgba(15, 23, 42, 0.85)',
-        backdropFilter: 'blur(12px)',
-        padding: '10px 20px',
-        overflowX: 'auto',
-        boxShadow: theme === 'light' ? 'inset 0 1px 3px rgba(0,0,0,0.02)' : 'none'
-      }}>
-        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div 
+        className="navbar-category-bar"
+        style={{ 
+          borderTop: theme === 'light' ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.08)',
+          background: theme === 'light' ? '#f8fafc' : 'rgba(15, 23, 42, 0.85)',
+          backdropFilter: 'blur(12px)',
+          padding: '10px 16px',
+          boxShadow: theme === 'light' ? 'inset 0 1px 3px rgba(0,0,0,0.02)' : 'none'
+        }}
+      >
+        <div className="navbar-category-container">
           <button
             onClick={() => onSelectCategory(null)}
             style={{

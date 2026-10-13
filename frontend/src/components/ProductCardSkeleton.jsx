@@ -11,6 +11,10 @@ export default function ProductCardSkeleton() {
         padding: 16,
         borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border-subtle)',
+        minWidth: 0,
+        width: '100%',
+        maxWidth: '100%',
+        boxSizing: 'border-box'
       }}
     >
       {/* Image Skeleton */}

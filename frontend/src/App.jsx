@@ -115,11 +115,11 @@ function App() {
       )}
 
       {/* Main Catalog Section */}
-      <main style={{ maxWidth: 1320, width: '100%', margin: '0 auto', padding: '24px 20px', flex: 1 }}>
+      <main className="main-catalog-container">
         {/* Category / Search heading */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
           <div>
-            <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-main)', fontFamily: 'var(--font-display)' }}>
+            <h2 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.6rem)', fontWeight: 800, color: 'var(--text-main)', fontFamily: 'var(--font-display)', wordBreak: 'break-word' }}>
               {searchQuery
                 ? `Qidiruv natijalari: "${searchQuery}"`
                 : selectedCategory

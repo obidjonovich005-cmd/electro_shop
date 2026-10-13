@@ -60,17 +60,16 @@ const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedIn
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div 
-        className="modal-content" 
+        className="modal-content product-detail-modal-card" 
         onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: 840, padding: 32, position: 'relative' }}
       >
         {/* Close button */}
         <button
           onClick={onClose}
           style={{
             position: 'absolute',
-            top: 20,
-            right: 20,
+            top: 16,
+            right: 16,
             background: 'rgba(255, 255, 255, 0.08)',
             border: 'none',
             borderRadius: '50%',
@@ -80,7 +79,8 @@ const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedIn
             alignItems: 'center',
             justifyContent: 'center',
             color: '#ffffff',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            zIndex: 10
           }}
         >
           <X size={20} />
@@ -93,7 +93,7 @@ const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedIn
           </div>
         ) : (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 32, alignItems: 'flex-start' }}>
+            <div className="product-detail-grid">
               {/* Product Image Stage */}
               <div>
                 <div style={{
@@ -350,7 +350,7 @@ const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedIn
                 </div>
 
                 {/* Quantity & CTA buttons */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
                   {/* Quantity selector */}
                   <div style={{
                     display: 'flex',
@@ -358,7 +358,8 @@ const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedIn
                     background: 'rgba(255, 255, 255, 0.06)',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-subtle)',
-                    padding: 4
+                    padding: 4,
+                    flexShrink: 0
                   }}>
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -381,7 +382,7 @@ const ProductDetailModal = ({ productSlug, onClose, onSelectRelated, onProceedIn
                     onClick={handleAddToCart}
                     disabled={product.stock <= 0}
                     className={`btn ${added ? 'btn-cyan' : 'btn-primary'}`}
-                    style={{ flex: 1, padding: '12px 18px', fontSize: '0.95rem' }}
+                    style={{ flex: '1 1 180px', minWidth: 140, padding: '12px 16px', fontSize: '0.92rem' }}
                   >
                     {added ? (
                       <>
